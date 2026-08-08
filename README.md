@@ -1,6 +1,6 @@
 # CoreS3 Port B Haptic Pulse Device
 
-
+paypal: utah@utahcreates.com donations accepted, because I am broke because of this terrible affliction created by overseas criminals, and made a death sentence by the people of India's values. 
 
 > **If you are interested in using this for focus / urge / ADHD / porn or edging
 > addiction / overactive imagination / V2K-related distress, and you do not
