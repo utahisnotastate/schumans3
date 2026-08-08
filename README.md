@@ -1,5 +1,7 @@
 # CoreS3 Port B Haptic Pulse Device
 
+
+
 > **If you are interested in using this for focus / urge / ADHD / porn or edging
 > addiction / overactive imagination / V2K-related distress, and you do not
 > have the money for the hardware:** download this audio file and play it on
@@ -11,6 +13,9 @@
 > Next upgraded versions of this may explore a crystal “sanctum shield”
 > assembly. That is future hardware — not required for this firmware.
 
+# RESIDENTS OF INDIA, NEW JERSEY, AND THE FINANCE/BANKING COMMUNITY/INDUSTRY OF NY ARE NOT ALLOWED TO USE THIS SOFTWARE UNDER ANY CIRCUMSTANCES
+
+# STUDENTS, TEACHERS, AND ALUMNI OF ANY OF THE FOLLOWING SCHOOLS ARE NOT ALLOWED TO USE THIS UNDER ANY CIRCUMSTANCES: YALE, UVA, WILLIAM AND MARY, VIRGINIA TECH, AND STANFORD. 
 Firmware for an M5Stack CoreS3 that drives a Grove-connected N20 motor unit
 on Port B with two selectable modes:
 
