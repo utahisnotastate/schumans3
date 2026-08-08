@@ -1,5 +1,11 @@
 # CoreS3 Port B Haptic Pulse Device
 
+# IF YOU ARE INTERESTED IN USING THIS FOR THE V2K, ADHD, PORN ADDICTION, EDGING ADDICTION, OVERACTIVE IMAGINATION, OVERACTIVE SEXUAL IMAGINATION THAT GETS IN THE WAY OF LIFE, AND DO NOT HAVE THE MONEY PLEASE DOWNLOAD THIS AUDIO FILE AND PLAY IT ON REPEAT WITH HEADPHONES ON. IT'S JUST AS GOOD: https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link
+
+# USE AT YOUR OWN RISK, AND NO GUARANTEES OR MEDICAL CLAIMS ARE BEING MADE. 
+
+# NEXT UPGRADED VERSIONS OF THIS WILL BE WITH A CRYSTAL TO BUILD A SANCTUM SHIELD. 
+
 Firmware for an M5Stack CoreS3 that drives a Grove-connected N20 motor unit
 on Port B with a 7.83 Hz pulse pattern, in two selectable modes:
 
@@ -28,6 +34,8 @@ Only two things, both from the official M5Stack store:
 That's the whole bill of materials — no soldering, no separate motor
 driver, no hub. The Vibration Motor Unit plugs straight into the CoreS3's
 **Port B** (the black Grove port) with the cable it ships with.
+
+- Attach the Vibration motor unit to the wirst, or any conductive bone. Try to get a battery module for the cores3. If all else fails, use this and the audio file. The audio file emphasis fixing porn addiction, adhd, and the "urge" whenever you need to get work done or anything productive. 
 
 ## One-time software setup
 
