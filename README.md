@@ -1,26 +1,43 @@
 # CoreS3 Port B Haptic Pulse Device
 
-# IF YOU ARE INTERESTED IN USING THIS FOR THE V2K, ADHD, PORN ADDICTION, EDGING ADDICTION, OVERACTIVE IMAGINATION, OVERACTIVE SEXUAL IMAGINATION THAT GETS IN THE WAY OF LIFE, AND DO NOT HAVE THE MONEY PLEASE DOWNLOAD THIS AUDIO FILE AND PLAY IT ON REPEAT WITH HEADPHONES ON. IT'S JUST AS GOOD: https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link
-
-# USE AT YOUR OWN RISK, AND NO GUARANTEES OR MEDICAL CLAIMS ARE BEING MADE. 
-
-# NEXT UPGRADED VERSIONS OF THIS WILL BE WITH A CRYSTAL TO BUILD A SANCTUM SHIELD. 
+> **If you are interested in using this for focus / urge / ADHD / porn or edging
+> addiction / overactive imagination / V2K-related distress, and you do not
+> have the money for the hardware:** download this audio file and play it on
+> repeat with headphones. Treat it as the free fallback:
+> [Google Drive audio](https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link)
+>
+> **Use at your own risk. No guarantees or medical claims are being made.**
+>
+> Next upgraded versions of this may explore a crystal “sanctum shield”
+> assembly. That is future hardware — not required for this firmware.
 
 Firmware for an M5Stack CoreS3 that drives a Grove-connected N20 motor unit
-on Port B with a 7.83 Hz pulse pattern, in two selectable modes:
+on Port B with two selectable modes:
 
 - **SQUARE** — on/off toggle at 7.83 Hz, 50% duty. A steady buzz.
-- **WAVE** (default) — smooth PWM pattern: a 7.83 Hz ripple whose intensity
-  swells and fades on a 0.1 Hz (6-per-minute) envelope, like a breathing
-  pace cue.
+- **WAVE** (default) — additive PWM: **136.1 Hz Ohm carrier** + **7.83 Hz
+  ripple**, intensity swells and fades on a **0.1 Hz** (6-per-minute)
+  breathing envelope. 136.1 Hz is a faster haptic tone only — not a
+  crystal/planetary transmitter.
 
-It streams JSON status over USB serial once a second and shows live status
-on the CoreS3 screen.
+It streams JSON telemetry over USB serial once a second and shows a **live
+analytics dashboard** on the CoreS3 screen (mode, frequency matrix, duty /
+Ohm / ripple meters, power, breath cycles, boot uptime, and run time).
 
 **What this is not:** a Schumann-resonance transmitter, a vagus-nerve or
 autonomic-nervous-system stimulation device, or anything with a
 demonstrated health/therapeutic effect. It's a rhythmic haptic novelty — a
 motor buzzing in a specific pattern, nothing more.
+
+## What's new in this firmware
+
+| Feature | Detail |
+|---|---|
+| Tri-resonance WAVE | Adds 136.1 Hz Ohm carrier to the existing 7.83 Hz ripple + 0.1 Hz envelope |
+| Faster WAVE updates | ~1 kHz duty updates so 136.1 Hz is not aliased away |
+| Live dashboard | Status pill, frequency matrix, live duty / Ohm / ripple bars |
+| Uptime | Boot uptime + run time (counts only while motor is running) |
+| Richer serial JSON | `ohm_hz`, `ripple_hz`, `duty_pct`, `envelope_pct`, `boot_uptime`, `run_uptime` |
 
 ## Hardware — what to buy
 
@@ -35,7 +52,10 @@ That's the whole bill of materials — no soldering, no separate motor
 driver, no hub. The Vibration Motor Unit plugs straight into the CoreS3's
 **Port B** (the black Grove port) with the cable it ships with.
 
-- Attach the Vibration motor unit to the wirst, or any conductive bone. Try to get a battery module for the cores3. If all else fails, use this and the audio file. The audio file emphasis fixing porn addiction, adhd, and the "urge" whenever you need to get work done or anything productive. 
+**Wear tip:** attach the vibration motor unit to the wrist, or against a
+bony contact point. A CoreS3 battery module helps for portable use. If you
+cannot build the hardware yet, use the [audio fallback](https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link)
+with headphones for focus / urge moments when you need to get work done.
 
 ## One-time software setup
 
@@ -89,11 +109,15 @@ driver, no hub. The Vibration Motor Unit plugs straight into the CoreS3's
 ```bash
 python -m platformio device monitor -e m5stack-cores3 --port COM8
 ```
-Expect one JSON line per second:
+
+Expect one JSON line per second (WAVE mode):
+
 ```json
-{"status":"PULSING","mode":"WAVE","carrier_hz":7.83,"envelope_hz":0.1,"power_pct":100,"breath_cycles":3,"uptime_s":34}
+{"status":"PULSING","mode":"WAVE","ohm_hz":136.1,"ripple_hz":7.83,"envelope_hz":0.1,"power_pct":100,"duty_pct":42,"envelope_pct":67,"breath_cycles":3,"boot_uptime":"00:00:34","run_uptime":"00:00:34","uptime_s":34}
 ```
-The CoreS3 screen shows the same status live.
+
+The CoreS3 screen mirrors this live: frequency matrix, duty/Ohm/ripple
+meters, power limit, breath cycles, boot uptime, and run time.
 
 ## Controls
 
@@ -105,7 +129,7 @@ toggle START/STOP:
 | `START` | Resume pulsing |
 | `STOP` | Stop the motor |
 | `MODE SQUARE` | Switch to steady on/off buzz |
-| `MODE WAVE` | Switch to smooth breathing-pace pattern (default) |
+| `MODE WAVE` | Switch to Ohm + ripple + breathing envelope (default) |
 | `POWER <0-100>` | Set intensity as a percentage |
 
 ## Repo layout
