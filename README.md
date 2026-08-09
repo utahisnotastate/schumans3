@@ -43,6 +43,13 @@ boot uptime, and run time).
 any 5 V USB-C wall adapter, power bank, or M5Stack battery module. The motor
 and UI auto-start in WAVE mode — no computer required after flashing.
 
+**Optional desk / ambient mode:** plug an [ENV III](https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988)
+into **Port A** (red). Firmware then shows live pressure / temp / humidity and
+can micro-adjust the Ohm carrier (~134–138 Hz) from barometric pressure.
+This is novelty desk tuning so you can leave the unit on a workstation — it
+does **not** create a room-scale “resonance bubble” or replace body contact
+haptics with real atmospheric impedance matching.
+
 **What this is not:** a Schumann-resonance transmitter, a vagus-nerve or
 autonomic-nervous-system stimulation device, or anything with a
 demonstrated health/therapeutic effect. It's a rhythmic haptic novelty — a
@@ -55,10 +62,11 @@ motor buzzing in a specific pattern, nothing more.
 | Dual-core FreeRTOS | Wave synthesis pinned to **Core 1** with `vTaskDelayUntil` (1 ms); UI/serial on Core 0 |
 | Hardware LEDC PWM | 20 kHz silent carrier on the ESP32-S3 LEDC peripheral (10-bit duty) |
 | Tri-resonance WAVE | 136.1 Hz Ohm + 7.83 Hz ripple + 0.1 Hz envelope |
-| Live dashboard | Status pill, frequency matrix, live duty / Ohm / ripple bars, core ID |
+| Optional ENV III ambient | Port A pressure/temp can detune Ohm in 134–138 Hz; works without the sensor |
+| Live dashboard | Status pill, frequency matrix, live meters, ENV III readouts when present |
 | Uptime | Boot uptime + run time (counts only while motor is running) |
 | Standalone boot | Runs on battery / wall USB with no PC attached |
-| Richer serial JSON | `ohm_hz`, `duty_pct`, `wave_core`, `boot_uptime`, `run_uptime`, `standalone` |
+| Richer serial JSON | `ohm_hz`, `env_iii`, `pressure_hPa`, `temp_c`, `ambient`, uptimes |
 
 ## Hardware — what to buy
 
@@ -72,6 +80,22 @@ motor buzzing in a specific pattern, nothing more.
 That's the required bill of materials — no soldering, no separate motor
 driver, no hub. The Vibration Motor Unit plugs straight into the CoreS3's
 **Port B** (the black Grove port) with the cable it ships with.
+
+### Optional — ENV III environmental sensor (desk / ambient)
+
+**Optional.** Not required for wearable / Port B motor use. Available on the
+official M5Stack store. Plug into **Port A** (red Grove / I2C). Firmware
+auto-detects it; if missing, Ohm stays fixed at 136.1 Hz and everything else
+still works.
+
+| Item | Link | Notes |
+|---|---|---|
+| ENV III Unit (SHT30 + QMP6988) | [shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988](https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988) (SKU U001-C) | Temp, humidity, barometric pressure. Grove cable included. Port A only. |
+
+With ENV III attached you can leave the CoreS3 on a desk: the UI shows live
+environment stats, and `AMBIENT ON` (default when the sensor is found)
+nudges the Ohm carrier from pressure/temperature. Use `AMBIENT OFF` for a
+fixed 136.1 Hz carrier.
 
 ### Optional (highly recommended) — neodymium magnet
 
@@ -97,11 +121,12 @@ with headphones for focus / urge moments when you need to get work done.
 
 ## Architecture (why this is not the MicroPython paste)
 
-| Idea from the “C++ golden master” paste | What this repo actually does |
+| Idea from the ambient / ENV III paste | What this repo actually does |
 |---|---|
-| Hardware LEDC carrier | Yes — 20 kHz LEDC (keeps whine down; paste used 5 kHz) |
-| FreeRTOS Core 1 + `vTaskDelayUntil` | Yes — 1 ms period (paste’s 5 ms undersamples 136.1 Hz) |
-| Live M5Unified dashboard | Yes — analytics UI, not a static splash screen |
+| ENV III on Port A (I2C) | Yes — optional auto-detect; never blocks boot if absent |
+| Pressure-tuned Ohm carrier | Yes — small 134–138 Hz novelty detune on Core 0 every 2 s |
+| FreeRTOS Core 1 wave + Core 0 sensors | Yes — keeps 1 ms wave / 20 kHz LEDC (rejects 5 ms / 5 kHz paste) |
+| Live dashboard + JSON | Yes — ENV fields when present; full analytics retained |
 | Downgrade M5Unified / 1.5 Mbaud upload | No — keeps proven CoreS3 USB-CDC flash settings |
 
 ## One-time software setup
@@ -162,12 +187,14 @@ python -m platformio device monitor -e m5stack-cores3 --port COM8
 
 Expect one JSON line per second (WAVE mode):
 
+Without ENV III:
+
 ```json
-{"status":"PULSING","mode":"WAVE","ohm_hz":136.1,"ripple_hz":7.83,"envelope_hz":0.1,"power_pct":100,"duty_pct":42,"envelope_pct":67,"breath_cycles":3,"wave_core":1,"boot_uptime":"00:00:34","run_uptime":"00:00:34","uptime_s":34,"standalone":true}
+{"status":"PULSING","mode":"WAVE","ohm_hz":136.10,"ripple_hz":7.83,"envelope_hz":0.1,"power_pct":100,"duty_pct":42,"envelope_pct":67,"breath_cycles":3,"wave_core":1,"env_iii":false,"ambient":false,"boot_uptime":"00:00:34","run_uptime":"00:00:34","uptime_s":34,"standalone":true}
 ```
 
-`wave_core` should be `1`. The screen shows the same analytics live even
-when no serial monitor is open.
+With ENV III on Port A, JSON also includes `pressure_hPa`, `temp_c`,
+`humidity_pct`, `altitude_m`, and `ambient`. `wave_core` should be `1`.
 
 ## Controls
 
@@ -181,6 +208,8 @@ toggle START/STOP:
 | `MODE SQUARE` | Switch to steady on/off buzz |
 | `MODE WAVE` | Switch to Ohm + ripple + breathing envelope (default) |
 | `POWER <0-100>` | Set intensity as a percentage |
+| `AMBIENT ON` | Enable ENV III Ohm detune (needs ENV III on Port A) |
+| `AMBIENT OFF` | Lock Ohm at 136.1 Hz even if ENV III is present |
 
 ## Repo layout
 
