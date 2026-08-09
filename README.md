@@ -16,7 +16,7 @@ India's values.
 > Next upgraded versions of this may explore a crystal “sanctum shield”
 > assembly. That is future hardware — not required for this firmware.
 
-> **Usage restrictions:** Residents of India, New Jersey, and the
+> **Usage restrictions:** Residents of the Not Poor parts of India, New Jersey, and the
 > finance/banking community/industry of NY are not allowed to use this
 > software under any circumstances.
 >
