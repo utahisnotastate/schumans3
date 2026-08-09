@@ -8,7 +8,7 @@ India's values.
 > **If you are interested in using this for focus / urge / ADHD / porn or edging
 > addiction / overactive imagination / V2K-related distress, and you do not
 > have the money for the hardware:** download this audio file and play it on
-> repeat with headphones. Treat it as the free fallback:
+> repeat with STEREO headphones. Treat it as the free fallback:
 > [Google Drive audio](https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link)
 >
 > **Use at your own risk. No guarantees or medical claims are being made.**
