@@ -1,6 +1,9 @@
 # CoreS3 Port B Haptic Pulse Device
 
-paypal: utah@utahcreates.com donations accepted, because I am broke because of this terrible affliction created by overseas criminals, and made a death sentence by the people of India's values. 
+**PayPal donations:** [utah@utahcreates.com](mailto:utah@utahcreates.com) —
+donations accepted, because I am broke because of this terrible affliction
+created by overseas criminals, and made a death sentence by the people of
+India's values.
 
 > **If you are interested in using this for focus / urge / ADHD / porn or edging
 > addiction / overactive imagination / V2K-related distress, and you do not
@@ -13,9 +16,15 @@ paypal: utah@utahcreates.com donations accepted, because I am broke because of t
 > Next upgraded versions of this may explore a crystal “sanctum shield”
 > assembly. That is future hardware — not required for this firmware.
 
-# RESIDENTS OF INDIA, NEW JERSEY, AND THE FINANCE/BANKING COMMUNITY/INDUSTRY OF NY ARE NOT ALLOWED TO USE THIS SOFTWARE UNDER ANY CIRCUMSTANCES
+> **Usage restrictions:** Residents of India, New Jersey, and the
+> finance/banking community/industry of NY are not allowed to use this
+> software under any circumstances.
+>
+> Students, teachers, and alumni of any of the following schools are not
+> allowed to use this under any circumstances: Yale, Dartmouth, UVA, William
+> and Mary, Virginia Tech, linguistics majors at UNC Chapel Hill, and
+> Stanford.
 
-# STUDENTS, TEACHERS, AND ALUMNI OF ANY OF THE FOLLOWING SCHOOLS ARE NOT ALLOWED TO USE THIS UNDER ANY CIRCUMSTANCES: YALE, DARTMOUTH, UVA, WILLIAM AND MARY, VIRGINIA TECH, LINGUISTICS MAJORS AT UNC CHAPEL HILL, AND STANFORD. 
 Firmware for an M5Stack CoreS3 that drives a Grove-connected N20 motor unit
 on Port B with two selectable modes:
 
@@ -25,9 +34,14 @@ on Port B with two selectable modes:
   breathing envelope. 136.1 Hz is a faster haptic tone only — not a
   crystal/planetary transmitter.
 
-It streams JSON telemetry over USB serial once a second and shows a **live
-analytics dashboard** on the CoreS3 screen (mode, frequency matrix, duty /
-Ohm / ripple meters, power, breath cycles, boot uptime, and run time).
+It streams JSON telemetry over USB serial once a second (when a PC is
+attached) and shows a **live analytics dashboard** on the CoreS3 screen
+(mode, frequency matrix, duty / Ohm / ripple meters, power, breath cycles,
+boot uptime, and run time).
+
+**Standalone power:** flash once from a PC, then you can unplug and run from
+any 5 V USB-C wall adapter, power bank, or M5Stack battery module. The motor
+and UI auto-start in WAVE mode — no computer required after flashing.
 
 **What this is not:** a Schumann-resonance transmitter, a vagus-nerve or
 autonomic-nervous-system stimulation device, or anything with a
@@ -38,29 +52,57 @@ motor buzzing in a specific pattern, nothing more.
 
 | Feature | Detail |
 |---|---|
-| Tri-resonance WAVE | Adds 136.1 Hz Ohm carrier to the existing 7.83 Hz ripple + 0.1 Hz envelope |
-| Faster WAVE updates | ~1 kHz duty updates so 136.1 Hz is not aliased away |
-| Live dashboard | Status pill, frequency matrix, live duty / Ohm / ripple bars |
+| Dual-core FreeRTOS | Wave synthesis pinned to **Core 1** with `vTaskDelayUntil` (1 ms); UI/serial on Core 0 |
+| Hardware LEDC PWM | 20 kHz silent carrier on the ESP32-S3 LEDC peripheral (10-bit duty) |
+| Tri-resonance WAVE | 136.1 Hz Ohm + 7.83 Hz ripple + 0.1 Hz envelope |
+| Live dashboard | Status pill, frequency matrix, live duty / Ohm / ripple bars, core ID |
 | Uptime | Boot uptime + run time (counts only while motor is running) |
-| Richer serial JSON | `ohm_hz`, `ripple_hz`, `duty_pct`, `envelope_pct`, `boot_uptime`, `run_uptime` |
+| Standalone boot | Runs on battery / wall USB with no PC attached |
+| Richer serial JSON | `ohm_hz`, `duty_pct`, `wave_core`, `boot_uptime`, `run_uptime`, `standalone` |
 
 ## Hardware — what to buy
 
-Only two things, both from the official M5Stack store:
+### Required
 
 | Item | Link | Notes |
 |---|---|---|
 | M5Stack CoreS3 | [shop.m5stack.com/products/m5stack-cores3-esp32s3-iotdevelopment-kit](https://shop.m5stack.com/products/m5stack-cores3-esp32s3-iotdevelopment-kit) | ESP32-S3 controller. Comes with a USB-C cable. |
 | Vibration Motor Unit (N20) | [shop.m5stack.com/products/vibration-motor-unit](https://shop.m5stack.com/products/vibration-motor-unit) (SKU U059) | N20 motor + eccentric weight on a Grove-pluggable driver PCB. Includes its own Grove cable. |
 
-That's the whole bill of materials — no soldering, no separate motor
+That's the required bill of materials — no soldering, no separate motor
 driver, no hub. The Vibration Motor Unit plugs straight into the CoreS3's
 **Port B** (the black Grove port) with the cable it ships with.
+
+### Optional (highly recommended) — neodymium magnet
+
+**Optional, but very worth it.** Attach a small neodymium disc magnet to the
+motor’s moving mass / shaft area so the permanent magnet physically
+oscillates with each pulse. That increases the local kinetic feel and the
+localized magnetic flux swing from the vibration (a mechanical amplification
+hack — not a medical field emitter).
+
+| Item | Link | Notes |
+|---|---|---|
+| DIYMAG small rare-earth magnets (40 pack, 5 sizes) | [amazon.com/dp/B09TVXL3DZ](https://www.amazon.com/dp/B09TVXL3DZ) | Pick a small disc that fits the N20 weight without throwing the rotor too far off balance. |
+
+**Mount tip:** secure the magnet firmly (tape, heat-shrink, or adhesive) so it
+cannot fly off at speed. Start with a smaller disc from the pack; larger
+magnets hit harder but stress the motor more. Keep magnets away from credit
+cards, pacemakers, and hard drives.
 
 **Wear tip:** attach the vibration motor unit to the wrist, or against a
 bony contact point. A CoreS3 battery module helps for portable use. If you
 cannot build the hardware yet, use the [audio fallback](https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link)
 with headphones for focus / urge moments when you need to get work done.
+
+## Architecture (why this is not the MicroPython paste)
+
+| Idea from the “C++ golden master” paste | What this repo actually does |
+|---|---|
+| Hardware LEDC carrier | Yes — 20 kHz LEDC (keeps whine down; paste used 5 kHz) |
+| FreeRTOS Core 1 + `vTaskDelayUntil` | Yes — 1 ms period (paste’s 5 ms undersamples 136.1 Hz) |
+| Live M5Unified dashboard | Yes — analytics UI, not a static splash screen |
+| Downgrade M5Unified / 1.5 Mbaud upload | No — keeps proven CoreS3 USB-CDC flash settings |
 
 ## One-time software setup
 
@@ -100,6 +142,9 @@ with headphones for focus / urge moments when you need to get work done.
    python -m platformio run -e m5stack-cores3 -t upload --upload-port COM8
    ```
 
+5. After a successful flash you can unplug from the PC and power the CoreS3
+   from a wall adapter, power bank, or battery module — WAVE starts on boot.
+
 ### If the upload fails
 
 - **"No serial data received"** — hold the CoreS3's **LEFT** button, tap
@@ -118,11 +163,11 @@ python -m platformio device monitor -e m5stack-cores3 --port COM8
 Expect one JSON line per second (WAVE mode):
 
 ```json
-{"status":"PULSING","mode":"WAVE","ohm_hz":136.1,"ripple_hz":7.83,"envelope_hz":0.1,"power_pct":100,"duty_pct":42,"envelope_pct":67,"breath_cycles":3,"boot_uptime":"00:00:34","run_uptime":"00:00:34","uptime_s":34}
+{"status":"PULSING","mode":"WAVE","ohm_hz":136.1,"ripple_hz":7.83,"envelope_hz":0.1,"power_pct":100,"duty_pct":42,"envelope_pct":67,"breath_cycles":3,"wave_core":1,"boot_uptime":"00:00:34","run_uptime":"00:00:34","uptime_s":34,"standalone":true}
 ```
 
-The CoreS3 screen mirrors this live: frequency matrix, duty/Ohm/ripple
-meters, power limit, breath cycles, boot uptime, and run time.
+`wave_core` should be `1`. The screen shows the same analytics live even
+when no serial monitor is open.
 
 ## Controls
 
@@ -141,7 +186,7 @@ toggle START/STOP:
 
 ```
 schumans3/
-├── src/main.cpp        firmware source (Arduino/C++, M5Unified)
+├── src/main.cpp        firmware (dual-core FreeRTOS + LEDC + dashboard)
 ├── platformio.ini       build config (board, framework, upload settings)
 ├── flash-cores3.ps1     build + upload helper script
 └── README.md            this file
