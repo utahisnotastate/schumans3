@@ -12,7 +12,7 @@ India's values.
 > [Google Drive audio](https://drive.google.com/file/d/1TRnLnzHPjId2cimcJG_MYwrEfuYL1JDO/view?usp=drive_link)
 >
 > **Use at your own risk. No guarantees or medical claims are being made.**
->
+> **DO NOT BUILD MULTIPLE OF THESE TYPES OF DEVICES TO USE AT THE SAME TIME FOR ADDED PROTECTION. JUST 1 CORES3 AND THE AUDIO FILE FOR SEVERE CASES.**
 > Next upgraded versions of this may explore a crystal “sanctum shield”
 > assembly. That is future hardware — not required for this firmware.
 
